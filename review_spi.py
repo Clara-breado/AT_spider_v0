@@ -12,6 +12,11 @@ import threading
 import traceback
 from queue import Queue
 from threading import Thread
+import asyncio
+from requests.models import Response
+
+from requests.sessions import session
+import aiohttp
 
 ##one object for one attraction
 class AT_view_spider:
@@ -23,7 +28,7 @@ class AT_view_spider:
         self.index_queue = Queue()
         self.page_cnt = 0
         self.review_cnt = 0
-        self.max_review = 20    #20 review in one json file
+        self.max_review = 10    #20 review in one json file
         self.url_list = []
         self.review_dict = []
         self.attr_name = ''
@@ -306,8 +311,8 @@ class AT_view_spider:
         check_save.start()
         thread_pool.append(check_save)
 
-        # for thread in thread_pool:
-        #     thread.join()
+        for thread in thread_pool:
+            thread.join()
 
 
         print("threads end!")
@@ -332,19 +337,20 @@ urls.append('https://www.tripadvisor.in/Attraction_Review-g186338-d218015-Review
 # a = AT_view_spider(urls[0])
 # a.main()
 
-# a = AT_view_spider(start_url)
-# a.main()
-sp = []
-for url in urls:
-    s = AT_view_spider(url)
-    sp.append(s)
-run_thread_pool = []
-for s in sp:
-    run_thread = threading.Thread(target=s.main(),args=())
-    run_thread.start()
-    run_thread_pool.append(run_thread)
-for thread in run_thread_pool:
-    thread.join()
+a = AT_view_spider(start_url)
+a.main()
+
+# sp = []
+# for url in urls:
+#     s = AT_view_spider(url)
+#     sp.append(s)
+# run_thread_pool = []
+# for s in sp:
+#     run_thread = threading.Thread(target=s.main(),args=())
+#     run_thread.start()
+#     run_thread_pool.append(run_thread)
+# for thread in run_thread_pool:
+#     thread.join()
 
 end = time.time()
 print("time:%s" %(end-start))

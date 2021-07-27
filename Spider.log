@@ -1,0 +1,39 @@
+2021-07-27 10:57:47,060 - 69 - ERROR - There is no current event loop in thread 'get_url_0'.
+2021-07-27 10:57:47,063 - 70 - ERROR - Traceback (most recent call last):
+  File "c:\Users\t-dohuang\Documents\GitHub\AT_spider\review_spi.py", line 55, in get_html
+    session = aiohttp.ClientSession()
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\client.py", line 225, in __init__
+    loop = get_running_loop(loop)
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\helpers.py", line 283, in get_running_loop
+    loop = asyncio.get_event_loop()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.7_3.7.2544.0_x64__qbz5n2kfra8p0\lib\asyncio\events.py", line 644, in get_event_loop
+    % threading.current_thread().name)
+RuntimeError: There is no current event loop in thread 'get_url_0'.
+
+2021-07-27 10:57:47,064 - 72 - WARNING - ERROR - Retrying again website https://www.tripadvisor.in/Attraction_Review-g186338-d194299-Reviews-Churchill_War_Rooms-London_England.html, retrying in 2 secs
+2021-07-27 10:57:49,101 - 69 - ERROR - There is no current event loop in thread 'get_url_0'.
+2021-07-27 10:57:49,104 - 70 - ERROR - Traceback (most recent call last):
+  File "c:\Users\t-dohuang\Documents\GitHub\AT_spider\review_spi.py", line 55, in get_html
+    session = aiohttp.ClientSession()
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\client.py", line 225, in __init__
+    loop = get_running_loop(loop)
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\helpers.py", line 283, in get_running_loop
+    loop = asyncio.get_event_loop()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.7_3.7.2544.0_x64__qbz5n2kfra8p0\lib\asyncio\events.py", line 644, in get_event_loop
+    % threading.current_thread().name)
+RuntimeError: There is no current event loop in thread 'get_url_0'.
+
+2021-07-27 10:57:49,105 - 72 - WARNING - ERROR - Retrying again website https://www.tripadvisor.in/Attraction_Review-g186338-d194299-Reviews-Churchill_War_Rooms-London_England.html, retrying in 3 secs
+2021-07-27 10:57:52,117 - 69 - ERROR - There is no current event loop in thread 'get_url_0'.
+2021-07-27 10:57:52,118 - 70 - ERROR - Traceback (most recent call last):
+  File "c:\Users\t-dohuang\Documents\GitHub\AT_spider\review_spi.py", line 55, in get_html
+    session = aiohttp.ClientSession()
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\client.py", line 225, in __init__
+    loop = get_running_loop(loop)
+  File "C:\Users\t-dohuang\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\LocalCache\local-packages\Python37\site-packages\aiohttp\helpers.py", line 283, in get_running_loop
+    loop = asyncio.get_event_loop()
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.7_3.7.2544.0_x64__qbz5n2kfra8p0\lib\asyncio\events.py", line 644, in get_event_loop
+    % threading.current_thread().name)
+RuntimeError: There is no current event loop in thread 'get_url_0'.
+
+2021-07-27 10:57:52,119 - 72 - WARNING - ERROR - Retrying again website https://www.tripadvisor.in/Attraction_Review-g186338-d194299-Reviews-Churchill_War_Rooms-London_England.html, retrying in 2 secs
