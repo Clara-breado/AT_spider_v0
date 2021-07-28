@@ -24,7 +24,8 @@ class AT_review_spi:
     def __init__(self,base_url):
         # 初始化，连接MongoDB
         self.base_url = base_url
-        self.client = pymongo.MongoClient('mongodb://localhost:27017/')
+        self.proxypool_url = 'http://127.0.0.1:5555/random'
+        # self.client = pymongo.MongoClient('mongodb://localhost:27017/')
         self.success_get_count = 0
         self.success_test_count = 0
         self.failed_get_cnt = 0
@@ -35,12 +36,20 @@ class AT_review_spi:
         self.db_file = 'C:\\Users\\t-dohuang\\Documents\\GitHub\\AT_spider\\review_urls.db'
         self.db_construct_flag = False
         self.request_queue = Queue()
+        self.proxy_queue = Queue()
 
         html = self.get_html(self.base_url.format(page=''))
         self.page_cnt = int(int(html.xpath('//*[@id="tab-data-qa-reviews-0"]/div/div[5]/div[11]/div[2]/div/div/text()[6]')[0].replace(',',''))/10)
         self.attr_name = html.xpath('//*[@id="lithium-root"]/main/div[1]/div[2]/div[1]/header/div[3]/div[1]/div/h1//text()')[0]
         cop = re.compile("['/','?',':','*','<','>','|',\u0022]")    #todo:'\'
         self.attr_name = cop.sub("",self.attr_name)
+        self.proxy_queue.put('http://8.208.91.118:80')
+        self.proxy_queue.put('http://27.46.21.65:8888')
+        self.proxy_queue.put('http://14.115.105.73:808')
+        self.proxy_queue.put('http://106.54.221.125:3128')
+        self.proxy_queue.put('http://202.46.38.11:8080')
+        self.proxy_queue.put('http://47.91.137.211:3128')
+
         #mkdir
         self.dir_path = self.dir_path.format(attr_name=self.attr_name)
         isExists = os.path.exists(self.dir_path)
@@ -115,6 +124,13 @@ class AT_review_spi:
             logger.error(e)
             logger.error(traceback.format_exc())
 
+    def get_random_proxy(self):
+        """
+        get random proxy from proxypool
+        :return: proxy
+        """
+        return requests.get(self.proxypool_url).text.strip()
+        
     # 使用代理时，获取页面
     async def get_page(self, session, url):
         ## 一个随机生成请求头的库        
@@ -127,10 +143,15 @@ class AT_review_spi:
                 # 其他网站抓来的一批代理（如问题描述中所述），一共有5999条代理，每次随机选取一条
                 # p = 'http://' + random.choice(proxies_pool)
                 header = {'User-Agent': ua.random}
-                prox = 'http://109.200.166.167:8080'
+                # proxy = self.get_random_proxy()
+                # proxy = 'http://' + proxy
+                # p = self.proxy_queue.get()
+                p = 'http://121.237.149.142:3000'
+                # print("------------------")
                 async with session.get(url, headers = header,timeout = 20) as response:
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(20)
                     if response.status == 200:
+                        print(p)
                         self.success_get_count += 1
                         # if(self.success_get_count > 20):
                         #     self.failed_get_cnt -= 1
@@ -140,6 +161,7 @@ class AT_review_spi:
                         print("\033[5;31;m", response.status, "\033[;;m")
                         continue
             except Exception as e:
+                #decrease score of that proxy
                 print("请求失败orz", e)
                 self.failed_get_cnt += 1
                 logger.error("Cannot Finish get page" )
@@ -176,30 +198,30 @@ class AT_review_spi:
                 logger.warn('ERROR - Retrying again website %s, retrying in %d secs' % (url, randomtime))
                 time.sleep(randomtime)
                 continue      
-    # 测试代理  
-    async def test_proxy(self, dic):
-        ## 根据类型构造不同的代理及url
-        if dic["types"] == "HTTP":
-            test_url = "http://www.baidu.com/"
-            prop = "http://" + dic["proxies"]
-        else:
-            test_url = "https://www.baidu.com/"
-            prop = "https://" + dic["proxies"]
-        ua = UserAgent()
-        header = {'User-Agent': ua.random}
-        # 异步协程请求
-        async with aiohttp.ClientSession() as session:
-            while True:
-                try:
-                    async with session.get(test_url, headers = header, proxy = prop, timeout = 15, verify_ssl=False) as resp:
-                        if resp.status == 200:
-                            self.success_test_count += 1
-                            print(prop, "\033[5;36;40m===========>测试成功，写入数据库!=========%d次\033[;;m"%self.success_test_count)
-                            await self.insert_to_mongo(dic) ## 调用写入mongodb数据库的函数
-                            return
-                except Exception as e:
-                    print(prop, "==测试失败,放弃==", e)
-                    break
+    # # 测试代理  
+    # async def test_proxy(self, dic):
+    #     ## 根据类型构造不同的代理及url
+    #     if dic["types"] == "HTTP":
+    #         test_url = "http://www.baidu.com/"
+    #         prop = "http://" + dic["proxies"]
+    #     else:
+    #         test_url = "https://www.baidu.com/"
+    #         prop = "https://" + dic["proxies"]
+    #     ua = UserAgent()
+    #     header = {'User-Agent': ua.random}
+    #     # 异步协程请求
+    #     async with aiohttp.ClientSession() as session:
+    #         while True:
+    #             try:
+    #                 async with session.get(test_url, headers = header, timeout = 15, verify_ssl=False) as resp:
+    #                     if resp.status == 200:
+    #                         self.success_test_count += 1
+    #                         print(prop, "\033[5;36;40m===========>测试成功，写入数据库!=========%d次\033[;;m"%self.success_test_count)
+    #                         await self.insert_to_mongo(dic) ## 调用写入mongodb数据库的函数
+    #                         return
+    #             except Exception as e:
+    #                 print(prop, "==测试失败,放弃==", e)
+    #                 break
     
     # 获取代理池
     def get_proxies(self):
@@ -277,19 +299,24 @@ class AT_review_spi:
 
     #     except Exception as e:
 
-    # 写入MongoDB数据库   
-    async def insert_to_mongo(self, dic):
-        db = self.client.Myproxies
-        collection = db.proxies
-        collection.update_one(dic,{'$set': dic}, upsert=True)   # 设置upsert=True，避免重复插入
-        print("\033[5;32;40m插入记录：" + json.dumps(dic), "\033[;;m")
+    # # 写入MongoDB数据库   
+    # async def insert_to_mongo(self, dic):
+    #     db = self.client.Myproxies
+    #     collection = db.proxies
+    #     collection.update_one(dic,{'$set': dic}, upsert=True)   # 设置upsert=True，避免重复插入
+    #     print("\033[5;32;40m插入记录：" + json.dumps(dic), "\033[;;m")
     
     def multi_thread(self):
         try:
-            print(self.request_queue.qsize())
-            tasks = [asyncio.ensure_future(self.get()) for _ in range(self.request_queue.qsize())]
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(asyncio.wait(tasks))
+            # print(self.request_queue.qsize())
+            # tasks = [asyncio.ensure_future(self.get()) for _ in range(self.request_queue.qsize())]
+            # loop = asyncio.get_event_loop()
+            # loop.run_until_complete(asyncio.wait(tasks))
+            while(self.request_queue.qsize!=0):
+                print(self.request_queue.qsize())
+                tasks = [asyncio.ensure_future(self.get()) for _ in range(10)]
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(asyncio.wait(tasks))
         except Exception as e:
             logger.error('multi_thread failed!')
             logger.error(e)
@@ -302,6 +329,7 @@ if __name__ == "__main__":
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
+    proxypool_url = 'http://127.0.0.1:5555/random'
 
     urls = []
     start = time.time()
