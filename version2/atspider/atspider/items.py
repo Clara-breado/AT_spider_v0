@@ -11,6 +11,13 @@ class AtspiderItem(scrapy.Item):
     # name = scrapy.Field()
     # attr_name = scrapy.Field()
     attr_name = scrapy.Field()
+    # attr_page = scrapy.Field()
+    # attr_reviews = scrapy.Field()
+
+    attr_info = scrapy.Field()
+    pass
+
+class ReviewsItem(scrapy.Item):
     attr_page = scrapy.Field()
     attr_reviews = scrapy.Field()
     pass

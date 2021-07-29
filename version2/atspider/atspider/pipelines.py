@@ -5,41 +5,50 @@
 
 
 # useful for handling different item types with a single interface
+from atspider.items import AtspiderItem
 from itemadapter import ItemAdapter
 import json
-from itemadapter import ItemAdapter
-
+import logging
+import time
+from collections import OrderedDict
 class AtspiderPipeline:
+    PROC_CNT = 0
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=logging.INFO)
+    handler = logging.FileHandler('AT_Spider.log')
+    formatter = logging.Formatter('%(asctime)s - %(lineno)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
     # def process_item(self, item, spider):
     #     return item
     def open_spider(self, spider):
         spider.data = {}
         print("\033[5;36;40m----------------------open-------------------次\033[;;m")
-        # self.file = open('C:\\Users\\t-dohuang\\Documents\\GitHub\\atspider\\reviews_test.json', 'a')
-        # self.file.write('open file!!!\n')
     def close_spider(self, spider):
-        # self.file.write(json.dumps(spider.data))
+        self.logger.info("end time: %s" %str(time.time()))
         print("\033[5;36;40m----------------------close-------------------次\033[;;m")
-        # self.file.close()
+        # self.logger.info("PROC cnt is %d" %self.PROC_CNT)
 
     def process_item(self, item, spider):
-        # try:
-        #     spider.data[item['place']]['review'].append(item['attr_reviews'])
-        #     print("\033[5;36;40m----------------------process-------------------次\033[;;m")
-        # except: pass
+        # page = ItemAdapter(item).asdict()['attr_page']
+        # print("\033[5;36;40m----------------------%d page-------------------次\033[;;m"%page)
+        # self.file = open('C:\\Users\\t-dohuang\\Documents\\GitHub\\atspider\\dataset\\Little_Venice__reviews_{page}.json'.format(page=page), 'a')
+        # self.PROC_CNT += 1
+        # line = json.dumps(ItemAdapter(item).asdict(),indent=2)
+        # self.file.write(line)
+        # self.file.close()
         # return item
-        page = ItemAdapter(item).asdict()['attr_page']
-        print("\033[5;36;40m----------------------%d page-------------------次\033[;;m"%page)
-        self.file = open('C:\\Users\\t-dohuang\\Documents\\GitHub\\atspider\\reviews_{page}.json'.format(page=page), 'a')
-        # line = json.dumps(ItemAdapter(item).asdict()) + "\n"
-        line = json.dumps(ItemAdapter(item).asdict(),indent=2)
-        self.file.write(line)
-        self.file.close()
-        print("\033[5;36;40m----------------------write-------------------次\033[;;m")
-        return item
-
-class JsonWriterPipeline:
-
+        if type(item)==AtspiderItem:
+            name = ItemAdapter(item).asdict()['attr_name']
+            self.file = open('C:\\Users\\t-dohuang\\Documents\\GitHub\\atspider\\dataset\\{attr_name}__info.json'.format(attr_name=name), 'w')
+            line = json.dumps(ItemAdapter(item).asdict(),indent=2)
+            self.file.write(line)
+            self.file.close()
+            return item        
+        else:
+            pass
+class ReviewsItemPipeline:
     def open_spider(self, spider):
         self.file = open('items.jl', 'w')
 
