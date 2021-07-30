@@ -55,12 +55,12 @@ class atReviewSpider(scrapy.Spider):
             cnt = int(int(start_page.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[6]')[0].replace(',',''))/30)
             self.logger.info("page_cnt is %d" %cnt)
 
-            response = self.modiResponse(response)
-            selector = etree.HTML(response)
+            # response = self.modiResponse(response)
+            selector = etree.HTML(response.text)
             page_cnt = selector.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[1]')
             # print("\033[5;36;40m----------------------page:%d-------------------次\033[;;m"%page_cnt)
             
-            for i in range(101,110):
+            for i in range(1,2):
                 attr_url = self.base_url.format(i*30)
                 yield scrapy.Request(attr_url,callback=self.parseAttrPage,dont_filter=True)
         except Exception as e:
@@ -70,11 +70,11 @@ class atReviewSpider(scrapy.Spider):
     #function:get all attrs url in AttrPage and insert data into db
     def parseAttrPage(self,response):
         try:
-            response = self.modiResponse(response)
-            html = etree.HTML(response)
+            # response = self.modiResponse(response)
+            html = etree.HTML(response.text)
             attrs_url = html.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]//section[@class="_3Y-YU9SE _2gl5HHyP"]//div[@class="_1R2M9xFP"]//a/@href')
             #index !!!
-            for i in range(len(attrs_url)):
+            for i in range(15,20):
                 attrs_url[i] = str(attrs_url[i])
                 attrs_url[i] = 'https://www.tripadvisor.in'+attrs_url[i]
                 url = attrs_url[i]
@@ -91,8 +91,8 @@ class atReviewSpider(scrapy.Spider):
     #function: get Attr Info
     def parseAttrInfo(self,response,attr_base_url):
         try:
-            response = self.modiResponse(response)
-            html = etree.HTML(response)
+            # response = self.modiResponse(response)
+            html = etree.HTML(response.text)
             attr_base_url = re.sub(r'(Reviews)',r'\1{page}',attr_base_url)
             print(attr_base_url)
 
@@ -104,7 +104,7 @@ class atReviewSpider(scrapy.Spider):
             #construct url for reviews page
             page_cnt = int(int(html.xpath('//*[@id="tab-data-qa-reviews-0"]/div/div[5]/div[11]/div[2]/div/div/text()[6]')[0].replace(',',''))/10)
             self.logger.info("total page of attr is %d" %page_cnt)
-            for i in range(-1,page_cnt):
+            for i in range(-1,3):
                 #start from sec
                 bias = (i+1)*10     #10,20...52900,52910
                 url = attr_base_url.format(page='-or'+str(bias))
@@ -124,8 +124,8 @@ class atReviewSpider(scrapy.Spider):
             # print(page_cnt)
             self.logger.info("page is %d" %page_cnt)
 
-            response = self.modiResponse(response)
-            html = etree.HTML(response)
+            # response = self.modiResponse(response)
+            html = etree.HTML(response.text)
             review_dict = {}
             for i in range(10):
                 review = {}
@@ -134,6 +134,8 @@ class atReviewSpider(scrapy.Spider):
                 if(len(re_title)>0):
                     re_title = re_title[0]
                 else:
+                    #END!
+                    break
                     re_title = 'NONE'
 
                 re_time = html.xpath(review_path+'/span/span/div[4]/text()')

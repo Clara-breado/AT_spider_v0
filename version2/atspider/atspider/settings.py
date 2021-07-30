@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = 'atspider.spiders'
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -37,10 +37,10 @@ ROBOTSTXT_OBEY = True
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
+# DEFAULT_REQUEST_HEADERS = {
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
-#}
+# }
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
@@ -63,8 +63,9 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'atspider.pipelines.AtspiderPipeline': 300,
+   'atspider.pipelines.AtspiderPipeline': 100,
    'atspider.pipelines.ReviewsItemPipeline': 200,
+   # 'atspider.pipelines.DbPipeLine':301,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -87,3 +88,11 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+DB_CONFIG = {
+    'driver':'pymysql',          #数据库驱动
+    'host':'localhost',          #IP地址
+    'port':3306,                 #端口，默认为3306，实际项目建议更改
+    'user':'root',               #通常为root，实际项目应更改
+    'db':'attrs_reviews',         #选定数据库名
+    'charset':'utf8'             #数据库编码，此处不是utf-8。最后一项结尾没有逗号
+}

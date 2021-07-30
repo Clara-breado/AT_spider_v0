@@ -1,0 +1,66 @@
+{
+  "attr_name": "London Underground",
+  "attr_page": 3,
+  "attr_reviews": {
+    "30": {
+      "title": "Dreadful",
+      "time": "May 2021",
+      "type": "Solo",
+      "review": "Really rubbish app and a even worts website always some sort of glitch especially when your in a a rush"
+    },
+    "31": {
+      "title": "Amazing, Easy, Cheap",
+      "time": "Jul 2020",
+      "type": "NONE",
+      "review": "I never take a taxi in London. The Underground goes everywhere and then you have to walk a little. Walking is how you see London. The signs down under can guide even a non-subway rider. Easy. Never that crowded and the trains come a lot more often than the ones in NYC."
+    },
+    "32": {
+      "title": "Why are peoplke allowedon tubes without masks",
+      "time": "Jun 2021",
+      "type": "NONE",
+      "review": "Travelled on tubes to get around but sadly on all trips there were people without masks why were they allowed to travel"
+    },
+    "33": {
+      "title": "Smelly and hot",
+      "time": "Jun 2020",
+      "type": "Business",
+      "review": "Didnt like the traveling with the tube. Very hot and difficult to breath. On one station a very strong urine smell. No personel to ask for help."
+    },
+    "34": {
+      "title": "The train is king",
+      "time": "Jun 2021",
+      "type": "NONE",
+      "review": "The best way to get around London is using the underground. Study the tube map and you can find everything easy."
+    },
+    "35": {
+      "title": "Well worth a visit",
+      "time": "May 2021",
+      "type": "NONE",
+      "review": "A very enjoyable place to visit, whether you are a tourist or a Londoner or a tourist. A lot of interesting stuff for adults, but also plenty to keep kids interested, even with Covid restrictions."
+    },
+    "36": {
+      "title": "Preferred method",
+      "time": "Jun 2021",
+      "type": "NONE",
+      "review": "Always use the underground as it's the easiest and price efficient method of transport. TIP for tourists: we have and always will use 'Tube Map' app, can plan routes by saying what station you're going from and to and will tell you which lines to catch, how long it'll take and the cheapest route. Can also get notifications for any delays."
+    },
+    "37": {
+      "title": "Nice experience :grinning_face: ",
+      "time": "Apr 2021",
+      "type": "Business",
+      "review": "The underground :metro: network is extensive and arguably the fastest transport. The stairs are quite long and sometimes confusing. "
+    },
+    "38": {
+      "title": "Fantastic",
+      "time": "Jul 2020",
+      "type": "NONE",
+      "review": "When you first look at the map your probably thinking 'oh my god what are all these coloured line!' but when you get your head around it it's brilliant because you have the different zones (depending on the pass that you buy) you can travel all over London"
+    },
+    "39": {
+      "title": "Confusing at forst",
+      "time": "May 2021",
+      "type": "Family",
+      "review": "Handy using the underground.Got confused at first however lots of helpful staff on hand to help.Bought a day card so we could use it on all transport and it was a godsend in the end."
+    }
+  }
+}

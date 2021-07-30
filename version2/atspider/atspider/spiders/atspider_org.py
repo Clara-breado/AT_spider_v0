@@ -17,9 +17,13 @@ from atspider.items import AtspiderItem
 # import items
 class atspider_org(scrapy.Spider):
     name = "atspider_org"
-    start_url = 'https://www.tripadvisor.in/Attractions-g186338-Activities-a_allAttractions.true-London_England.html'
-    base_url_0 = 'https://www.tripadvisor.in/Attraction_Review-g186338-d189033-Reviews{page}-Little_Venice-London_England.html'
-    base_url = 'https://www.tripadvisor.in/Attractions-g186338-Activities-oa{}-London_England.html'
+    # start_url = 'https://www.tripadvisor.in/Attractions-g186338-Activities-a_allAttractions.true-London_England.html'
+    # base_url_0 = 'https://www.tripadvisor.in/Attraction_Review-g186338-d189033-Reviews{page}-Little_Venice-London_England.html'
+    # base_url = 'https://www.tripadvisor.in/Attractions-g186338-Activities-oa{}-London_England.html'
+
+    start_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-a_allAttractions.true-Italy.html'
+    base_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-oa{}-Italy.html'
+
     region = 'London_England'
     logger = logging.getLogger(__name__)
     logger.setLevel(level=logging.INFO)
@@ -30,9 +34,8 @@ class atspider_org(scrapy.Spider):
 
     def start_requests(self):
         self.logger.info("start time: %s" %str(time.time()))
-        # home = 'https://www.tripadvisor.in/Attraction_Review-g186338-d187531-Reviews-Notting_Hill-London_England.html'
-        # yield scrapy.Request(home, callback=self.parseHome)
         region = 'https://www.tripadvisor.in/Attractions-g186338-Activities-oa270-London_England.html'
+        region = 'https://www.tripadvisor.in/Attractions-g187768-Activities-oa30-Italy.html'
         yield scrapy.Request(region, callback=self.parseRegion)
 
     #function:beautify response
@@ -63,12 +66,12 @@ class atspider_org(scrapy.Spider):
             cnt = int(int(start_page.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[6]')[0].replace(',',''))/30)
             self.logger.info("page_cnt is %d" %cnt)
 
-            response = self.modiResponse(response)
-            selector = etree.HTML(response)
-            page_cnt = selector.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[1]')
+            # response = self.modiResponse(response)
+            # selector = etree.HTML(response)
+            # page_cnt = selector.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[1]')
             # print("\033[5;36;40m----------------------page:%d-------------------次\033[;;m"%page_cnt)
             
-            for i in range(105,150):
+            for i in range(cnt):
                 attr_url = self.base_url.format(i*30)
                 yield scrapy.Request(attr_url,callback=self.parseAttrPage)
         except Exception as e:
@@ -77,8 +80,8 @@ class atspider_org(scrapy.Spider):
     #function:get all attrs url in AttrPage and insert data into db
     def parseAttrPage(self,response):
         try:
-            response = self.modiResponse(response)
-            html = etree.HTML(response)
+            # response = self.modiResponse(response)
+            html = etree.HTML(response.text)
             attrs_url = html.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]//section[@class="_3Y-YU9SE _2gl5HHyP"]//div[@class="_1R2M9xFP"]//a/@href')
             #index !!!
             for i in range(len(attrs_url)):
@@ -96,8 +99,8 @@ class atspider_org(scrapy.Spider):
     #function: get Attr Info
     def parseAttrInfo(self,response):
         try:
-            response = self.modiResponse(response)
-            html = etree.HTML(response)
+            # response = self.modiResponse(response)
+            html = etree.HTML(response.text)
 
             ##name
             name = html.xpath('//*[@id="lithium-root"]/main/div[1]/div[2]/div[1]/header/div[3]/div[1]/div/h1//text()')[0]
