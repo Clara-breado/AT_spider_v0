@@ -19,7 +19,7 @@ class AtspiderPipeline:
     PROC_CNT = 0
     logger = logging.getLogger(__name__)
     logger.setLevel(level=logging.INFO)
-    handler = logging.FileHandler('AT_Spider.log')
+    handler = logging.FileHandler('AT_Spider_1.log')
     formatter = logging.Formatter('%(asctime)s - %(lineno)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
@@ -35,10 +35,12 @@ class AtspiderPipeline:
         self.file.write(line)
         self.file.close()
         self.logger.info("end time: %s" %str(time.time()))
+        self.logger.info("item cnt: %d" %self.PROC_CNT)
         print("\033[5;36;40m----------------------close-------------------次\033[;;m")
         # self.logger.info("PROC cnt is %d" %self.PROC_CNT)
 
     def process_item(self, item, spider):
+        self.PROC_CNT += 1
         if type(item)==AtspiderItem:
             name = ItemAdapter(item).asdict()['attr_name']
             self.attrs['{attr_name}'.format(attr_name = name)] = ItemAdapter(item).asdict()

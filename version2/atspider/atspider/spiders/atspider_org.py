@@ -21,22 +21,40 @@ class atspider_org(scrapy.Spider):
     # base_url_0 = 'https://www.tripadvisor.in/Attraction_Review-g186338-d189033-Reviews{page}-Little_Venice-London_England.html'
     # base_url = 'https://www.tripadvisor.in/Attractions-g186338-Activities-oa{}-London_England.html'
 
-    start_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-a_allAttractions.true-Italy.html'
-    base_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-oa{}-Italy.html'
+    # start_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-a_allAttractions.true-Italy.html'
+    # base_url = 'https://www.tripadvisor.in/Attractions-g187768-Activities-oa{}-Italy.html'
+
+    start_url = 'https://www.tripadvisor.in/Attractions-g187427-Activities-a_allAttractions.true-Spain.html'
+    base_url = 'https://www.tripadvisor.in/Attractions-g187427-Activities-oa{}-Spain.html'
 
     region = 'London_England'
     logger = logging.getLogger(__name__)
     logger.setLevel(level=logging.INFO)
-    handler = logging.FileHandler('AT_Spider.log')
+    handler = logging.FileHandler('AT_Spider_1.log')
     formatter = logging.Formatter('%(asctime)s - %(lineno)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
     def start_requests(self):
         self.logger.info("start time: %s" %str(time.time()))
-        region = 'https://www.tripadvisor.in/Attractions-g186338-Activities-oa270-London_England.html'
-        region = 'https://www.tripadvisor.in/Attractions-g187768-Activities-oa30-Italy.html'
-        yield scrapy.Request(region, callback=self.parseRegion)
+        try:
+            ## test
+            start_page = self.get_html(self.start_url)
+            cnt = int(int(start_page.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[6]')[0].replace(',',''))/30)
+            self.logger.info("page_cnt is %d" %cnt)
+
+            # response = self.modiResponse(response)
+            # selector = etree.HTML(response)
+            # page_cnt = selector.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[1]')
+            # print("\033[5;36;40m----------------------page:%d-------------------次\033[;;m"%page_cnt)
+            self.logger.info("scraped from 0 to 900")
+        
+            for i in range(900):
+                attr_url = self.base_url.format(i*30)
+                yield scrapy.Request(attr_url,callback=self.parseAttrPage)
+        except Exception as e:
+            self.logger.error(e) 
+            self.logger.error(traceback.format_exc())  
 
     #function:beautify response
     def modiResponse(self,response):
@@ -108,6 +126,9 @@ class atspider_org(scrapy.Spider):
             name = cop.sub("",name)
             # print("name:%s" %name)
             ##labels
+            if name is None:
+                self.logger.warn("empty name")
+                pass
             keywords = html.xpath('//*[@id="lithium-root"]/main/div[1]/div[2]/div[2]/div/div/span/section[1]/div/div/span/div/div[1]/div[3]/div/text()')
             keywords = re.split('&',keywords[0])
             keywordslists = html.xpath('//*[@id="tab-data-qa-reviews-0"]/div/div[1]/div/div[3]/div[2]/*//text()')

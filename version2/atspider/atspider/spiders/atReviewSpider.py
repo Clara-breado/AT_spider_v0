@@ -59,8 +59,8 @@ class atReviewSpider(scrapy.Spider):
             selector = etree.HTML(response.text)
             page_cnt = selector.xpath('//*[@id="lithium-root"]/main/span/div/div[2]/div/div/div/span/div/div[2]/div[2]/section[39]/span/div[2]/div/div/text()[1]')
             # print("\033[5;36;40m----------------------page:%d-------------------次\033[;;m"%page_cnt)
-            
-            for i in range(1,2):
+            self.logger.info("page is from 0 to 900")
+            for i in range(900):
                 attr_url = self.base_url.format(i*30)
                 yield scrapy.Request(attr_url,callback=self.parseAttrPage,dont_filter=True)
         except Exception as e:
